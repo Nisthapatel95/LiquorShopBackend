@@ -12,10 +12,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 // ── Database ──────────────────────────────────────────────────────────────────
 var connString = builder.Configuration.GetConnectionString("DefaultConnection") ?? "";
-if (connString.Contains(".db") || connString.Contains("Data Source="))
+if (string.IsNullOrWhiteSpace(connString) || connString.Contains(".db") || connString.Contains("Data Source=") || !connString.Contains("Server="))
 {
     builder.Services.AddDbContext<AppDbContext>(options =>
-        options.UseSqlite(connString));
+        options.UseSqlite("Data Source=liquorshop.db"));
 }
 else
 {
@@ -90,6 +90,8 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+app.UseCors("AllowAngular");
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -102,17 +104,18 @@ using (var scope = app.Services.CreateScope())
     try
     {
         db.Database.EnsureCreated();
-        db.Database.ExecuteSqlRaw(@"
-            IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('SalesOrders') AND name = 'CustomerName')
-                ALTER TABLE SalesOrders ADD CustomerName NVARCHAR(200) NOT NULL DEFAULT '';
-            IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('SalesOrders') AND name = 'CustomerPhone')
-                ALTER TABLE SalesOrders ADD CustomerPhone NVARCHAR(100) NOT NULL DEFAULT '';
-        ");
+        if (db.Database.IsSqlServer())
+        {
+            db.Database.ExecuteSqlRaw(@"
+                IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('SalesOrders') AND name = 'CustomerName')
+                    ALTER TABLE SalesOrders ADD CustomerName NVARCHAR(200) NOT NULL DEFAULT '';
+                IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('SalesOrders') AND name = 'CustomerPhone')
+                    ALTER TABLE SalesOrders ADD CustomerPhone NVARCHAR(100) NOT NULL DEFAULT '';
+            ");
+        }
     }
     catch { }
 }
-
-app.UseCors("AllowAngular");
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
