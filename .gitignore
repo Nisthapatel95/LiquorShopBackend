@@ -1,0 +1,120 @@
+# Build output
+
+bin/
+obj/
+
+# Visual Studio
+
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio Code
+
+.vscode/
+
+# Rider / JetBrains
+
+.idea/
+*.sln.iml
+
+# NuGet
+
+packages/
+*.nupkg
+*.snupkg
+.nuget/
+
+# Logs
+
+*.log
+logs/
+
+# Test results
+
+TestResults/
+*.trx
+
+# ASP.NET Core
+
+wwwroot/lib/
+
+# Environment / local configuration
+
+.env
+.env.*
+!.env.example
+
+# User secrets
+
+secrets.json
+
+# Publish output
+
+publish/
+*.publishsettings
+
+# OS generated files
+
+.DS_Store
+Thumbs.db
+
+# Temporary files
+
+*.tmp
+*.temp
+*.bak
+
+# Database files
+
+*.mdf
+*.ldf
+*.ndf
+
+# Coverage
+
+coverage/
+.coverage
+.coveragexml
+
+# Docker
+
+docker-compose.override.yml
+
+# Azure
+
+appsettings.Development.json
+appsettings.Local.json
+
+# Generated files
+
+Generated/
+GeneratedCode/
+
+# MSBuild
+
+*.cache
+*.pdb
+
+# Windows
+
+$RECYCLE.BIN/
+*.stackdump
+[.D
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+arm64/
+[Aa]rtifacts/
+
+# Benchmark results
+
+BenchmarkDotNet.Artifacts/
+
+# Swagger generated files
+
+swagger.json
+swagger.yaml
