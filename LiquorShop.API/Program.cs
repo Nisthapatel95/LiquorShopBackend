@@ -113,6 +113,7 @@ using (var scope = app.Services.CreateScope())
                     ALTER TABLE SalesOrders ADD CustomerPhone NVARCHAR(100) NOT NULL DEFAULT '';
             ");
         }
+        DbInitializer.SeedAsync(db).GetAwaiter().GetResult();
     }
     catch { }
 }
