@@ -11,8 +11,17 @@ using Microsoft.OpenApi.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 // ── Database ──────────────────────────────────────────────────────────────────
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+var connString = builder.Configuration.GetConnectionString("DefaultConnection") ?? "";
+if (connString.Contains(".db") || connString.Contains("Data Source="))
+{
+    builder.Services.AddDbContext<AppDbContext>(options =>
+        options.UseSqlite(connString));
+}
+else
+{
+    builder.Services.AddDbContext<AppDbContext>(options =>
+        options.UseSqlServer(connString));
+}
 
 // ── JWT Settings ──────────────────────────────────────────────────────────────
 var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>()!;
