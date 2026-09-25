@@ -115,7 +115,10 @@ using (var scope = app.Services.CreateScope())
         }
         DbInitializer.SeedAsync(db).GetAwaiter().GetResult();
     }
-    catch { }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"DB Initialization error: {ex.Message}");
+    }
 }
 app.UseHttpsRedirection();
 app.UseAuthentication();

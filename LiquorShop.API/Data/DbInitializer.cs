@@ -17,10 +17,11 @@ public static class DbInitializer
             await db.SaveChangesAsync();
         }
 
-        // 2. Ensure Admin User exists
-        if (!await db.Users.AnyAsync(u => u.Email == "admin@liquorshop.com"))
+        // 2. Ensure Admin User exists with correct password
+        var admin = await db.Users.FirstOrDefaultAsync(u => u.Email == "admin@liquorshop.com");
+        if (admin is null)
         {
-            var adminUser = new User
+            db.Users.Add(new User
             {
                 FullName     = "Administrator",
                 Email        = "admin@liquorshop.com",
@@ -28,15 +29,19 @@ public static class DbInitializer
                 RoleId       = 1,
                 IsActive     = true,
                 CreatedAt    = DateTime.UtcNow
-            };
-            db.Users.Add(adminUser);
-            await db.SaveChangesAsync();
+            });
+        }
+        else
+        {
+            admin.PasswordHash = BCrypt.Net.BCrypt.HashPassword("Admin@123");
+            admin.IsActive     = true;
         }
 
-        // 3. Ensure Cashier User exists
-        if (!await db.Users.AnyAsync(u => u.Email == "cashier@liquorshop.com"))
+        // 3. Ensure Cashier User exists with correct password
+        var cashier = await db.Users.FirstOrDefaultAsync(u => u.Email == "cashier@liquorshop.com");
+        if (cashier is null)
         {
-            var cashierUser = new User
+            db.Users.Add(new User
             {
                 FullName     = "Default Cashier",
                 Email        = "cashier@liquorshop.com",
@@ -44,10 +49,15 @@ public static class DbInitializer
                 RoleId       = 2,
                 IsActive     = true,
                 CreatedAt    = DateTime.UtcNow
-            };
-            db.Users.Add(cashierUser);
-            await db.SaveChangesAsync();
+            });
         }
+        else
+        {
+            cashier.PasswordHash = BCrypt.Net.BCrypt.HashPassword("Cashier@123");
+            cashier.IsActive     = true;
+        }
+
+        await db.SaveChangesAsync();
 
         // 4. Ensure Default Categories exist
         if (!await db.Categories.AnyAsync())
