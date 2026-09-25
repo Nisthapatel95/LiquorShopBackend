@@ -18,36 +18,32 @@ public static class DbInitializer
         }
 
         // 2. Ensure Admin User exists
-        if (!await db.Users.AnyAsync(u => u.Username == "admin" || u.Email == "admin@liquorshop.com"))
+        if (!await db.Users.AnyAsync(u => u.Email == "admin@liquorshop.com"))
         {
             var adminUser = new User
             {
-                Username = "admin",
-                Email = "admin@liquorshop.com",
+                FullName     = "Administrator",
+                Email        = "admin@liquorshop.com",
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword("Admin@123"),
-                FullName = "Administrator",
-                Phone = "9999999999",
-                RoleId = 1,
-                IsActive = true,
-                CreatedAt = DateTime.UtcNow
+                RoleId       = 1,
+                IsActive     = true,
+                CreatedAt    = DateTime.UtcNow
             };
             db.Users.Add(adminUser);
             await db.SaveChangesAsync();
         }
 
         // 3. Ensure Cashier User exists
-        if (!await db.Users.AnyAsync(u => u.Username == "cashier" || u.Email == "cashier@liquorshop.com"))
+        if (!await db.Users.AnyAsync(u => u.Email == "cashier@liquorshop.com"))
         {
             var cashierUser = new User
             {
-                Username = "cashier",
-                Email = "cashier@liquorshop.com",
+                FullName     = "Default Cashier",
+                Email        = "cashier@liquorshop.com",
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword("Cashier@123"),
-                FullName = "Default Cashier",
-                Phone = "8888888888",
-                RoleId = 2,
-                IsActive = true,
-                CreatedAt = DateTime.UtcNow
+                RoleId       = 2,
+                IsActive     = true,
+                CreatedAt    = DateTime.UtcNow
             };
             db.Users.Add(cashierUser);
             await db.SaveChangesAsync();
@@ -59,10 +55,10 @@ public static class DbInitializer
             var categories = new[]
             {
                 new Category { Name = "Whiskey", Description = "Premium Aged Spirits" },
-                new Category { Name = "Beer", Description = "Domestic and Imported Beers" },
-                new Category { Name = "Rum", Description = "White and Dark Rums" },
-                new Category { Name = "Vodka", Description = "Distilled Spirits" },
-                new Category { Name = "Wine", Description = "Red and White Wines" },
+                new Category { Name = "Beer",    Description = "Domestic and Imported Beers" },
+                new Category { Name = "Rum",     Description = "White and Dark Rums" },
+                new Category { Name = "Vodka",   Description = "Distilled Spirits" },
+                new Category { Name = "Wine",    Description = "Red and White Wines" },
                 new Category { Name = "General", Description = "Default Category" }
             };
             db.Categories.AddRange(categories);
@@ -74,8 +70,8 @@ public static class DbInitializer
         {
             var suppliers = new[]
             {
-                new Supplier { Name = "Martignetti Companies", ContactPerson = "Sales Dept", Email = "orders@martignetti.com", Phone = "781-761-3950", IsActive = true },
-                new Supplier { Name = "National Beverage Distributors", ContactPerson = "Logistics", Email = "contact@natbev.com", Phone = "800-555-0199", IsActive = true }
+                new Supplier { Name = "Martignetti Companies", ContactName = "Sales Dept", Email = "orders@martignetti.com", Phone = "781-761-3950", IsActive = true },
+                new Supplier { Name = "National Beverage Distributors", ContactName = "Logistics", Email = "contact@natbev.com", Phone = "800-555-0199", IsActive = true }
             };
             db.Suppliers.AddRange(suppliers);
             await db.SaveChangesAsync();
